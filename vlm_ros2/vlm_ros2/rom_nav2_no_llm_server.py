@@ -66,41 +66,6 @@ class ROMNav2LLM(Node):
         self.get_logger().info("ROM Nav2 LLM Ready - Listening for socket commands...")
 
 
-    def get_current_position(self):
-        """Get robot's current position from TF: map -> base_footprint"""
-        try:
-            # Wait for transform to be available
-            transform = self.tf_buffer.lookup_transform(
-                'map',
-                'base_footprint',
-                rclpy.time.Time(),
-                timeout=rclpy.duration.Duration(seconds=1.0)
-            )
-            
-            # Extract position
-            x = transform.transform.translation.x
-            y = transform.transform.translation.y
-            z = transform.transform.translation.z
-            
-            # Extract orientation (quaternion to yaw)
-            qx = transform.transform.rotation.x
-            qy = transform.transform.rotation.y
-            qz = transform.transform.rotation.z
-            qw = transform.transform.rotation.w
-            
-            # Convert quaternion to yaw angle
-            siny_cosp = 2.0 * (qw * qz + qx * qy)
-            cosy_cosp = 1.0 - 2.0 * (qy * qy + qz * qz)
-            yaw = math.atan2(siny_cosp, cosy_cosp)
-            
-            self.get_logger().info(f"Current position: x={x:.2f}, y={y:.2f}, yaw={yaw:.2f}")
-            return {'x': x, 'y': y, 'z': z, 'yaw': yaw}
-            
-        except (LookupException, ConnectivityException, ExtrapolationException) as e:
-            self.get_logger().error(f"TF lookup failed: {e}")
-            return None
-
-
     def stop_rotation(self):
         """Stop robot rotation by publishing zero velocity 3 times"""
         self.get_logger().info("Stopping rotation...")
@@ -140,6 +105,41 @@ class ROMNav2LLM(Node):
         direction_str = "left (CCW)" if direction == 1 else "right (CW)"
         self.get_logger().info(f"Started {direction_str} rotation at {SPIN_ANGULAR_VEL} rad/s for 360°")
 
+
+    def get_current_position(self):
+        """Get robot's current position from TF: map -> base_footprint"""
+        try:
+            # Wait for transform to be available
+            transform = self.tf_buffer.lookup_transform(
+                'map',
+                'base_footprint',
+                rclpy.time.Time(),
+                timeout=rclpy.duration.Duration(seconds=1.0)
+            )
+            
+            # Extract position
+            x = transform.transform.translation.x
+            y = transform.transform.translation.y
+            z = transform.transform.translation.z
+            
+            # Extract orientation (quaternion to yaw)
+            qx = transform.transform.rotation.x
+            qy = transform.transform.rotation.y
+            qz = transform.transform.rotation.z
+            qw = transform.transform.rotation.w
+            
+            # Convert quaternion to yaw angle
+            siny_cosp = 2.0 * (qw * qz + qx * qy)
+            cosy_cosp = 1.0 - 2.0 * (qy * qy + qz * qz)
+            yaw = math.atan2(siny_cosp, cosy_cosp)
+            
+            self.get_logger().info(f"Current position: x={x:.2f}, y={y:.2f}, yaw={yaw:.2f}")
+            return {'x': x, 'y': y, 'z': z, 'yaw': yaw}
+            
+        except (LookupException, ConnectivityException, ExtrapolationException) as e:
+            self.get_logger().error(f"TF lookup failed: {e}")
+            return None
+        
 
     def send_goal(self, x, y, theta):
         """Send navigation goal to Nav2"""

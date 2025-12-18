@@ -41,11 +41,11 @@ class ROMNav2VLMServer:
         self.robot_ip = robot_ip
         self.running = False
         
-        # Initialize Socket Communication
+        # Initialize Socket Communication (client only, no receiver needed on Jetson)
         self.socket_comm = RobotCommunication(host='0.0.0.0', port=SOCKET_PORT)
-        self.socket_comm.start_receiver()
-        print(f"✓ Socket communication started on port {SOCKET_PORT}")
-        print(f"✓ Connected to robot PC at {robot_ip}")
+        # Don't start receiver on Jetson side - only robot PC needs to receive
+        print(f"✓ Socket communication initialized on port {SOCKET_PORT}")
+        print(f"✓ Ready to send commands to robot PC at {robot_ip}")
         
         # State tracking
         self.is_searching = False
