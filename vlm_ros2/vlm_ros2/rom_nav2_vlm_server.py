@@ -19,7 +19,7 @@ from vlm_ros2.robot_socket import RobotCommunication
 #-------------   CONFIGURATION   -------------#
 
 # Robot PC Configuration
-ROBOT_PC_IP = "192.168.1.100"  # Robot PC IP address (update this to actual IP)
+ROBOT_PC_IP = "192.168.1.4"  # Robot PC IP address (update this to actual IP)
 SOCKET_PORT = 5000
 
 # Command Configuration
