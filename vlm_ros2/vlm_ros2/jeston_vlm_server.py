@@ -16,15 +16,21 @@ import threading
 import argparse
 import queue
 import cv2
-from vlm_ros2.robot_socket import RobotCommunication
+import sys
+import os
+
+# Add parent directory to path for standalone execution
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+from robot_socket import RobotCommunication
 
 # VLM Module imports (conditional based on user selection)
 try:
-    from vlm_ros2.jeston_vlm_gemini_api import CameraVLM as GeminiVLM
+    from jeston_vlm_gemini_api import CameraVLM as GeminiVLM
     GEMINI_AVAILABLE = True
-except ImportError:
+except ImportError as e:
     GEMINI_AVAILABLE = False
-    print("⚠ Gemini VLM module not available")
+    print(f"⚠ Gemini VLM module not available: {e}")
 
 # Future imports (placeholder - not yet implemented)
 RT_TRAJECTORY_AVAILABLE = False
@@ -195,10 +201,6 @@ class ROMNav2VLMServer:
                     self.latest_frame = frame
                 
                 frame_count += 1
-                
-                # Show progress every 100 frames
-                if frame_count % 100 == 0:
-                    print(f"  Camera: {frame_count} frames captured")
             else:
                 print("⚠ Camera read failed")
                 time.sleep(0.1)

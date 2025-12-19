@@ -1,0 +1,6 @@
+[console_scripts]
+jeston_vlm_server = vlm_ros2.jeston_vlm_server:main
+nav2_llm_node = vlm_ros2.nav2_llm_node:main
+pc_nav2_no_llm_server = vlm_ros2.pc_nav2_no_llm_server:main
+test_action_with_VLA = vlm_ros2.test_action_with_VLA:main
+

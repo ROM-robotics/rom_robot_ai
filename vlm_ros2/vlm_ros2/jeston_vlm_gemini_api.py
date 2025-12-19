@@ -3,15 +3,16 @@ import cv2
 import base64
 
 # Gemini Python client
-from google import genai
-from google.genai import types
+import google.generativeai as genai
 
 
 #-------------   GEMINI MODEL CONFIGURATION   -------------#
 
 API_KEY = "AIzaSyAJ_8oNV4Gb1TB0D1dnqOWYJoIveZ0_NT0"
-MODEL_ID = "gemini-robotics-er-1.5-preview"
-client = genai.Client(api_key=API_KEY)
+MODEL_ID = "gemini-1.5-flash"  # Use available model
+
+# Configure API
+genai.configure(api_key=API_KEY)
 
 
 #-------------    CAMERA + VLM MAIN CLASS  -------------#
@@ -39,16 +40,13 @@ class CameraVLM:
             
             image_bytes = base64.b64decode(img_base64)
             
-            response = client.models.generate_content(
-                model=MODEL_ID,
-                contents=[
-                    types.Part.from_bytes(data=image_bytes, mime_type="image/jpeg"),
-                    prompt
-                ],
-                config=types.GenerateContentConfig(
+            # Use Gemini API
+            model = genai.GenerativeModel(MODEL_ID)
+            response = model.generate_content(
+                [prompt, {"mime_type": "image/jpeg", "data": image_bytes}],
+                generation_config=genai.types.GenerationConfig(
                     temperature=0.1,
-                    max_output_tokens=10,
-                    thinking_config=types.ThinkingConfig(thinking_budget=0)
+                    max_output_tokens=10
                 )
             )
             
