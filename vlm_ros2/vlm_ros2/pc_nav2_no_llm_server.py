@@ -17,7 +17,7 @@ import time
 # Socket Communication Configuration
 SOCKET_HOST = "0.0.0.0"
 SOCKET_PORT = 5000
-JETSON_DEFAULT_IP = "192.168.1.100"  # Default Jetson Nano IP address
+JETSON_DEFAULT_IP = "192.168.1.21"  # Default Jetson Nano IP address
 
 # Rotation Search Configuration
 SPIN_ANGULAR_VEL = 0.3  # rad/s - Angular velocity for 360° search rotation

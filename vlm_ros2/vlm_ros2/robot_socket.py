@@ -54,9 +54,15 @@ class RobotCommunication:
             print(f"Send Error: {e}")
 
     def get_latest_data(self):
-        """ လက်ခံရရှိထားတဲ့ နောက်ဆုံး data ကို ယူဖတ်ရန် """
+        """ လက်ခံရရှိထားတဲ့ နောက်ဆုံး data ကို ယူဖတ်ရန် (read-and-clear pattern)
+        
+        Cache problem ဖြေရှင်းဖို့ read လုပ်ပြီးရင် clear လုပ်ပေးတယ်။
+        ဒါမှ နောက်ဆုံး command ကို တခါပဲ process လုပ်မယ်။
+        """
         with self.lock:
-            return self.data_received
+            data = self.data_received
+            self.data_received = None  # Clear after reading
+            return data
 
     def stop(self):
         self.running = False
