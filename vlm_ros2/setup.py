@@ -26,7 +26,7 @@ setup(
         'console_scripts': [
             'test_action_with_VLA = vlm_ros2.test_action_with_VLA:main',
             'nav2_llm_node = vlm_ros2.nav2_llm_node:main',
-            'rom_nav2_no_llm_server = vlm_ros2.rom_nav2_no_llm_server:main',
+            'pc_nav2_no_llm_server = vlm_ros2.pc_nav2_no_llm_server:main',
             'jeston_vlm_server = vlm_ros2.jeston_vlm_server:main',
         ],
     },

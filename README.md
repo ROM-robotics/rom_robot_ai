@@ -63,7 +63,7 @@ pip3 install opencv-python google-generativeai
 ```bash
 cd ~/your_ros2_workspace
 source install/setup.bash
-ros2 run vlm_ros2 rom_nav2_no_llm_server
+ros2 run vlm_ros2 pc_nav2_no_llm_server
 ```
 
 **Expected Output**:
