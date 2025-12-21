@@ -276,9 +276,12 @@ class ROMNav2VLMServer:
                 # Encode image to base64
                 img_base64 = self.vlm_instance.encode_image_to_base64(frame)
                 
-                # Check if object exists
-                found = self.vlm_instance.check_object_in_frame(target_object, img_base64)
+                # Check if object exists and get VLM response
+                found, vlm_response = self.vlm_instance.check_object_in_frame(target_object, img_base64)
                 check_count += 1
+                
+                # Print check progress with VLM response
+                print(f"  Check #{check_count}: VLM → '{vlm_response}'")
                 
                 if found:
                     print(f"\n✓ VLM worker found '{target_object}' after {check_count} checks!")
@@ -286,7 +289,8 @@ class ROMNav2VLMServer:
                     self.vlm_result_queue.put({
                         'found': True,
                         'target': target_object,
-                        'checks': check_count
+                        'checks': check_count,
+                        'vlm_response': vlm_response
                     })
                     break
                 
@@ -421,7 +425,9 @@ class ROMNav2VLMServer:
         self.vlm_instance.update_frame(current_frame)
         img_base64 = self.vlm_instance.encode_image_to_base64(current_frame)
         
-        found = self.vlm_instance.check_object_in_frame(target_object, img_base64)
+        # Get both detection result and VLM response text
+        found, vlm_response = self.vlm_instance.check_object_in_frame(target_object, img_base64)
+        print(f"  → VLM Response: '{vlm_response}'")
         
         if found:
             print(f"✓ Found '{target_object}' in current view!")
