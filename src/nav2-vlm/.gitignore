@@ -1,5 +1,0 @@
-# Ignore environment variable files
-openai-key.txt
-__pycache__
-.env
-
